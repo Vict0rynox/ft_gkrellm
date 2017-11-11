@@ -21,7 +21,7 @@ DateTimeMonitorModule &DateTimeMonitorModule::operator=(const DateTimeMonitorMod
     return *this;
 }
 
-const ModuleData DateTimeMonitorModule::update() const {
+const ModuleData DateTimeMonitorModule::update()  {
     time_t tmpTime = time(nullptr);
     std::string currentTime(ctime(&tmpTime));
     ModuleData data;

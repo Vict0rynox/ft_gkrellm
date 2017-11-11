@@ -12,16 +12,19 @@
 class ModuleData {
 protected:
     std::map<std::string, std::string> labels;
-    struct Data {
-        int x;
-    } dynamicData;
+    std::map<std::string, float> datums;
 public:
-    typedef std::map<std::string, std::string>::const_iterator const_iterator;
+    typedef std::map<std::string, std::string>::const_iterator labels_const_iterator;
+    typedef std::map<std::string, float>::const_iterator datums_const_iterator;
     ModuleData();
-    const Data& getData() const;
     void addLabel(std::string name, std::string value);
-    const_iterator getLabelsIterator() const;
-    const_iterator getLabelsIteratorEnd() const;
+    void addDatum(std::string name, float value);
+
+    labels_const_iterator getLabelsIterator() const;
+    labels_const_iterator getLabelsIteratorEnd() const;
+
+    datums_const_iterator getDatumsIterator() const;
+    datums_const_iterator getDatumsIteratorEnd() const;
 
 };
 

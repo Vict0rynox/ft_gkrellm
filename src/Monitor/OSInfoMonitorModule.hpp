@@ -9,11 +9,11 @@
 #include "IMonitorModule.hpp"
 #include "AMonitorModule.hpp"
 
-class OSInfoMonitorModule : public AMonitorModule{
+class OSInfoMonitorModule : public AMonitorModule {
 public:
     ~OSInfoMonitorModule();
     OSInfoMonitorModule();
-    const ModuleData update() const;
+    const ModuleData update();
 };
 
 #endif //FT_GKRELLM_OSINFOMONITORMODULE_HPP

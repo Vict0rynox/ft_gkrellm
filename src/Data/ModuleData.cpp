@@ -4,15 +4,13 @@
 
 #include "ModuleData.hpp"
 
-const ModuleData::Data &ModuleData::getData() const {
-    return dynamicData;
-}
+
 
 void ModuleData::addLabel(std::string name, std::string value) {
     labels[name] = value;
 }
 
-ModuleData::ModuleData() :dynamicData(), labels() {
+ModuleData::ModuleData() :labels(), datums(){
 
 }
 
@@ -20,6 +18,18 @@ std::map<std::string, std::string>::const_iterator ModuleData::getLabelsIterator
     return labels.begin();
 }
 
-ModuleData::const_iterator ModuleData::getLabelsIteratorEnd() const {
+ModuleData::labels_const_iterator ModuleData::getLabelsIteratorEnd() const {
     return labels.end();
+}
+
+void ModuleData::addDatum(std::string name, float value) {
+    datums[name] = value;
+}
+
+ModuleData::datums_const_iterator ModuleData::getDatumsIterator() const {
+    return datums.begin();
+}
+
+ModuleData::datums_const_iterator ModuleData::getDatumsIteratorEnd() const {
+    return datums.end();
 }

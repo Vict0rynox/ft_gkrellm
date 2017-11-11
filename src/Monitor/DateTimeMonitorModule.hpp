@@ -16,7 +16,7 @@ public:
     DateTimeMonitorModule(const DateTimeMonitorModule &rhs);
     DateTimeMonitorModule&operator=(const DateTimeMonitorModule &rhs);
     ~DateTimeMonitorModule();
-    virtual const ModuleData update() const;
+    virtual const ModuleData update();
 };
 
 

@@ -11,7 +11,7 @@
 class IMonitorModule {
 public:
     virtual const std::string& getName() const = 0;
-    virtual const ModuleData update() const = 0;
+    virtual const ModuleData update() = 0;
 
 };
 

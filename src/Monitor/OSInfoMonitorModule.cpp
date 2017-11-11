@@ -3,24 +3,36 @@
 //
 
 #include <fstream>
+#include <iostream>
+#include <sstream>
 #include "OSInfoMonitorModule.hpp"
 
 
 
-const ModuleData OSInfoMonitorModule::update() const {
+const ModuleData OSInfoMonitorModule::update() {
     ModuleData data;
 
-    std::string name;
-    std::string value;
+    char info[512];
 
-    std::ifstream swVerStream;
-    swVerStream.open("sw_vers", std::ios::in);
-    while (!swVerStream.eof()){
-        swVerStream >> name;
-        swVerStream >> value;
+    FILE *sw_vers = popen("sw_vers", "r");
+    while (fgets(info, sizeof(info), sw_vers)) {
+        std::string name;
+        std::string value;
+        std::string string(info);
+        std::istringstream iss(string);
+
+        iss >> name;
+        name = name.substr(0, name.size() - 1);
+        while (!iss.eof()) {
+            std::string tmp;
+            iss >> tmp;
+            if(!tmp.empty()) {
+                value += (" " + tmp);
+            }
+        }
         data.addLabel(name, value);
     }
-    swVerStream.close();
+    pclose(sw_vers);
     return data;
 }
 

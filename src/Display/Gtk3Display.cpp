@@ -109,13 +109,27 @@ void Gtk3Display::update() {
         ModuleData data = module->update();
         gtk_remove_child_recursive(widget);
 
-        ModuleData::const_iterator citr = data.getLabelsIterator();
-        for (;citr != data.getLabelsIteratorEnd(); citr++) {
+        ModuleData::labels_const_iterator clitr = data.getLabelsIterator();
+        for (;clitr != data.getLabelsIteratorEnd(); clitr++) {
             GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-            std::string nameVal = citr->first + ": " + citr->second;
+            std::string nameVal = clitr->first + ": " + clitr->second;
             gtk_box_pack_start(GTK_BOX(box), gtk_label_new(nameVal.c_str()), false, true, 0);
             gtk_container_add(GTK_CONTAINER(widget), box);
         }
+
+        ModuleData::datums_const_iterator cditr = data.getDatumsIterator();
+        for (;cditr != data.getDatumsIteratorEnd(); cditr++) {
+            GtkWidget *box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+            gtk_box_pack_start(GTK_BOX(box), gtk_label_new(cditr->first.c_str()), false, true, 0);
+
+            GtkWidget *progress = gtk_progress_bar_new();
+            gtk_progress_bar_set_show_text(GTK_PROGRESS_BAR(progress), 1);
+            gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress), (cditr->second / 100));
+
+            gtk_box_pack_start(GTK_BOX(box), progress, false, true, 0);
+            gtk_container_add(GTK_CONTAINER(widget), box);
+        }
+
         gtk_widget_show_all(this->mainWindow);
     }
 }
