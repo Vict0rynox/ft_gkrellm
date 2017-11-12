@@ -9,6 +9,7 @@
 #include "IMonitorDisplay.hpp"
 #include "AMonitorDisplay.hpp"
 #include <ncurses.h>
+#include <list>
 
 struct Widget
 {
@@ -18,10 +19,16 @@ struct Widget
 
 class NcursesDisplay : public AMonitorDisplay {
 protected:
-    std::map<std::string, Widget> modulesWidget;
+    std::list<Widget>::iterator currWidget;
+    bool isSelect;
+
+    std::list<Widget> modulesWidget;
+    //std::map<std::string, Widget> modulesWidget;
     bool isExit;
     void _init();
     void update();
+    void control();
+    void redrowWindows();
     int moduleHeihgtCalc(IMonitorModule *module);
 public:
     NcursesDisplay();

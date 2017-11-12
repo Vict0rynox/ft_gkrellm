@@ -15,26 +15,26 @@
 
 int main(int argc, char *argv[]) {
 
-    /*Gtk3Display gtk3Display;
-    gtk3Display.addMonitorModule(new DateTimeMonitorModule());
-    gtk3Display.addMonitorModule(new OSInfoMonitorModule());
-    gtk3Display.addMonitorModule(new CPUMonitorModule());
-    gtk3Display.addMonitorModule(new MemoryMonitorModule());
-    gtk3Display.addMonitorModule(new NetworkMonitorModule());
-    gtk3Display.addMonitorModule(new DiskMonitorModule());
-    gtk3Display.addMonitorModule(new NameMonitorModule());
-    gtk3Display.run();*/
 
-    NcursesDisplay ncursesDisplay;
-    ncursesDisplay.addMonitorModule(new DateTimeMonitorModule());
-    ncursesDisplay.addMonitorModule(new OSInfoMonitorModule());
-    ncursesDisplay.addMonitorModule(new CPUMonitorModule());
-    ncursesDisplay.addMonitorModule(new MemoryMonitorModule());
-    ncursesDisplay.addMonitorModule(new NetworkMonitorModule());
-    ncursesDisplay.addMonitorModule(new DiskMonitorModule());
-    ncursesDisplay.addMonitorModule(new NameMonitorModule());
-    ncursesDisplay.run();
-
+    IMonitorDisplay *display = nullptr;
+    if(argc > 2) {
+        if(std::string(argv[1]) == "-n") {
+            display = new NcursesDisplay();
+        } else{
+            std::cout << "Usage: -n flag for run in console mode";
+            exit(1);
+        }
+    } else {
+        display = new Gtk3Display();
+    }
+    display->addMonitorModule(new DateTimeMonitorModule());
+    display->addMonitorModule(new OSInfoMonitorModule());
+    display->addMonitorModule(new CPUMonitorModule());
+    display->addMonitorModule(new MemoryMonitorModule());
+    display->addMonitorModule(new NetworkMonitorModule());
+    display->addMonitorModule(new DiskMonitorModule());
+    display->addMonitorModule(new NameMonitorModule());
+    display->run();
     return 0;
 
 }

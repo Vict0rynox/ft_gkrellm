@@ -10,6 +10,7 @@ int NcursesDisplay::run() {
     _init();
     while (!isExit) {
         time_t startTime = clock();
+        control();
         update();
         time_t endTime = clock();
         time_t delay = endTime - startTime;
@@ -19,7 +20,7 @@ int NcursesDisplay::run() {
     return 0;
 }
 
-NcursesDisplay::NcursesDisplay() : AMonitorDisplay::AMonitorDisplay(), isExit(false) {
+NcursesDisplay::NcursesDisplay() : AMonitorDisplay::AMonitorDisplay(), isExit(false), isSelect(false){
 
 }
 
@@ -29,6 +30,11 @@ NcursesDisplay::~NcursesDisplay() {
 
 void NcursesDisplay::_init() {
     initscr();
+    start_color();
+    init_pair(1, COLOR_WHITE, COLOR_BLACK);
+    init_pair(2, COLOR_WHITE, COLOR_BLUE);
+    init_pair(3, COLOR_WHITE, COLOR_RED);
+
     curs_set(0);
     //raw();
     noecho();
@@ -47,45 +53,60 @@ void NcursesDisplay::_init() {
         y += height;
         widget.window = win;
         widget.module = itr->second;
-        modulesWidget[itr->first] = widget;
+        modulesWidget.push_back(widget);
     }
+    currWidget = modulesWidget.begin();
 }
 
 void NcursesDisplay::update() {
-    std::map<std::string, Widget>::iterator itr = modulesWidget.begin();
+    std::list<Widget>::iterator itr = modulesWidget.begin();
     for (; itr != modulesWidget.end(); itr++) {
-        WINDOW *window = itr->second.window;
-        IMonitorModule *module = itr->second.module;
+        WINDOW *window = itr->window;
+        IMonitorModule *module = itr->module;
         ModuleData data = module->update();
-
         werase(window);
         box(window, 0, 0);
+
+        if(itr->module->getName() == currWidget->module->getName()) {
+            if(isSelect) {
+                wbkgd(window, COLOR_PAIR(3));
+            } else {
+                wbkgd(window, COLOR_PAIR(2));
+            }
+        }
+
+        mvwprintw(window, 0, static_cast<int>(getmaxx(window) / 2 - std::strlen(itr->module->getName().c_str())), "%s",
+                  itr->module->getName().c_str());
+
         ModuleData::labels_const_iterator clitr = data.getLabelsIterator();
         int y = 1;
-        for (;clitr != data.getLabelsIteratorEnd(); clitr++) {
-            mvwprintw(window,y,2, "%s: %s", clitr->first.c_str(), clitr->second.c_str());
+        for (; clitr != data.getLabelsIteratorEnd(); clitr++) {
+            mvwprintw(window, y, 2, "%s: %s", clitr->first.c_str(), clitr->second.c_str());
             y += 2;
         }
         ModuleData::datums_const_iterator cditr = data.getDatumsIterator();
-        for (;cditr != data.getDatumsIteratorEnd(); cditr++) {
+        for (; cditr != data.getDatumsIteratorEnd(); cditr++) {
             int fill = static_cast<int>(std::roundf(cditr->second * 100));
             int maxSize = getmaxx(window) - 5;
             char *progBar = new char[maxSize + 1]();
             progBar[maxSize] = '\0';
-            for (int i = 0; i <fill; ++i) {
+            for (int i = 0; i < fill; ++i) {
                 progBar[i] = '*';
             }
             for (int i = fill; i < maxSize; ++i) {
                 progBar[i] = '_';
             }
-            mvwprintw(window,y,2, "%s:", cditr->first.c_str());
+            mvwprintw(window, y, static_cast<int>(getmaxx(window) / 2 - std::strlen(cditr->first.c_str())), "%s:",
+                      cditr->first.c_str());
             y += 2;
-            mvwprintw(window,y,2, "%s", progBar);
+            mvwprintw(window, y, 2, "%s", progBar);
             y += 2;
             delete[](progBar);
         }
         wrefresh(window);
+        wbkgd(window, COLOR_PAIR(1));
     }
+    refresh();
 }
 
 int NcursesDisplay::moduleHeihgtCalc(IMonitorModule *module) {
@@ -93,14 +114,67 @@ int NcursesDisplay::moduleHeihgtCalc(IMonitorModule *module) {
     ModuleData data = module->update();
     //calc lable
     ModuleData::labels_const_iterator clitr = data.getLabelsIterator();
-    for (;clitr != data.getLabelsIteratorEnd(); clitr++) {
+    for (; clitr != data.getLabelsIteratorEnd(); clitr++) {
         height += 2.5;
     }
     ModuleData::datums_const_iterator cditr = data.getDatumsIterator();
-    for (;cditr != data.getDatumsIteratorEnd(); cditr++) {
+    for (; cditr != data.getDatumsIteratorEnd(); cditr++) {
         height += 4.5;
     }
     //calc dynamic;
     return static_cast<int>(std::roundf(height));
 }
+
+void NcursesDisplay::redrowWindows() {
+    erase();
+    int y = 0;
+    std::list<Widget>::iterator itr = modulesWidget.begin();
+    for (; itr != modulesWidget.end(); itr++) {
+        //height;width|y;x
+        delwin(itr->window);
+        int height = moduleHeihgtCalc(itr->module);
+        WINDOW *win = newwin(height, (getmaxx(stdscr) - 20), y, 5);
+        y += height;
+        itr->window = win;
+    }
+}
+
+void NcursesDisplay::control() {
+    int btnCmd = getch();
+    if(btnCmd == KEY_UP){
+        if(currWidget != modulesWidget.begin()){
+            if(isSelect) {
+                std::list<Widget>::iterator prewWidget = currWidget;
+                prewWidget--;
+                std::swap(*prewWidget, *currWidget);
+                currWidget = prewWidget;
+                redrowWindows();
+            } else {
+                currWidget--;
+            }
+        }
+    } else if (btnCmd == KEY_DOWN) {
+        if(currWidget->module->getName() != modulesWidget.back().module->getName()){
+            if(isSelect) {
+                std::list<Widget>::iterator nextWidget = currWidget;
+                nextWidget++;
+                std::swap(*nextWidget, *currWidget);
+                currWidget = nextWidget;
+                redrowWindows();
+            } else {
+                currWidget++;
+            }
+        }
+    } else if (btnCmd == 32) {
+        if(isSelect) {
+            isSelect = false;
+        } else {
+            isSelect = true;
+        }
+    } else if(btnCmd == 27) {
+        endwin();
+        exit(0);
+    }
+}
+
 
