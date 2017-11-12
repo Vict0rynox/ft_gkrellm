@@ -141,7 +141,7 @@ void NcursesDisplay::redrowWindows() {
 
 void NcursesDisplay::control() {
     int btnCmd = getch();
-    if(btnCmd == KEY_UP){
+    if(btnCmd == KEY_UP) {
         if(currWidget != modulesWidget.begin()){
             if(isSelect) {
                 std::list<Widget>::iterator prewWidget = currWidget;
@@ -171,6 +171,34 @@ void NcursesDisplay::control() {
         } else {
             isSelect = true;
         }
+    } else if(btnCmd == KEY_F(1) && isSelect) {
+        if(modulesWidget.size() > 1) {
+            modulesWidget.erase(currWidget);
+            currWidget = modulesWidget.begin();
+            isSelect = false;
+            redrowWindows();
+        }
+    } else if(btnCmd == KEY_F(2)){
+        std::list<Widget>::iterator witr = modulesWidget.begin();
+        for (; witr != modulesWidget.end(); witr++) {
+            delwin(witr->window);
+        }
+        modulesWidget.clear();
+
+        int y = 0;
+        std::map<std::string, IMonitorModule *>::iterator itr = monitorModules.begin();
+        for (; itr != monitorModules.end(); itr++) {
+            //height;width|y;x
+            Widget widget = {};
+            int height = moduleHeihgtCalc(itr->second);
+            WINDOW *win = newwin(height, (getmaxx(stdscr) - 20), y, 5);
+            y += height;
+            widget.window = win;
+            widget.module = itr->second;
+            modulesWidget.push_back(widget);
+        }
+        currWidget = modulesWidget.begin();
+        redrowWindows();
     } else if(btnCmd == 27) {
         endwin();
         exit(0);

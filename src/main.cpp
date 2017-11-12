@@ -17,8 +17,9 @@ int main(int argc, char *argv[]) {
 
 
     IMonitorDisplay *display = nullptr;
-    if(argc > 2) {
-        if(std::string(argv[1]) == "-n") {
+    if(argc >= 2) {
+        std::string param(argv[1]);
+        if(param == "-n") {
             display = new NcursesDisplay();
         } else{
             std::cout << "Usage: -n flag for run in console mode";
