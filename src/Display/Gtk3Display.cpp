@@ -20,6 +20,7 @@ Gtk3Display::Gtk3Display() : AMonitorDisplay::AMonitorDisplay(), widgetMonitorMo
 }
 
 static void activate(GtkApplication *app, Gtk3Display *display) {
+    (void)app;
     display->appActivate();
 }
 

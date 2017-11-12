@@ -45,7 +45,7 @@ const ModuleData CPUMonitorModule::update() {
 }
 
 CPUMonitorModule::CPUMonitorModule()
-        : AMonitorModule::AMonitorModule("CPU Info"), cpuInfos(), _previousTotalTicks(), _previousStateTicks() {
+        : AMonitorModule::AMonitorModule("CPU Info"), _previousTotalTicks(), _previousStateTicks(), cpuInfos() {
     _previousStateTicks[0] = 0;
     _previousStateTicks[1] = 0;
     _previousStateTicks[2] = 0;

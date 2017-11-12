@@ -19,12 +19,10 @@ struct Widget
 
 class NcursesDisplay : public AMonitorDisplay {
 protected:
+    bool isExit;
     std::list<Widget>::iterator currWidget;
     bool isSelect;
-
     std::list<Widget> modulesWidget;
-    //std::map<std::string, Widget> modulesWidget;
-    bool isExit;
     void _init();
     void update();
     void control();

@@ -20,8 +20,8 @@ int NcursesDisplay::run() {
     return 0;
 }
 
-NcursesDisplay::NcursesDisplay() : AMonitorDisplay::AMonitorDisplay(), isExit(false), isSelect(false){
-
+NcursesDisplay::NcursesDisplay() : AMonitorDisplay::AMonitorDisplay(), isExit(false), isSelect(false), modulesWidget(){
+    currWidget = modulesWidget.begin();
 }
 
 NcursesDisplay::~NcursesDisplay() {
@@ -55,7 +55,6 @@ void NcursesDisplay::_init() {
         widget.module = itr->second;
         modulesWidget.push_back(widget);
     }
-    currWidget = modulesWidget.begin();
 }
 
 void NcursesDisplay::update() {
@@ -200,8 +199,7 @@ void NcursesDisplay::control() {
         currWidget = modulesWidget.begin();
         redrowWindows();
     } else if(btnCmd == 27) {
-        endwin();
-        exit(0);
+        isExit = true;
     }
 }
 
