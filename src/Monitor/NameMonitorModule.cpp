@@ -29,3 +29,13 @@ const ModuleData NameMonitorModule::update() {
 NameMonitorModule::~NameMonitorModule() {
 
 }
+
+NameMonitorModule::NameMonitorModule(const NameMonitorModule &rhs) : AMonitorModule::AMonitorModule(rhs.name){
+
+}
+
+NameMonitorModule& NameMonitorModule::operator=(const NameMonitorModule &rhs)
+{
+    name = rhs.name;
+    return *this;
+}

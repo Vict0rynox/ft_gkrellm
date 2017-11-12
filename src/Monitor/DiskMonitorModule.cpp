@@ -41,3 +41,12 @@ DiskMonitorModule::~DiskMonitorModule() {
 DiskMonitorModule::DiskMonitorModule() : AMonitorModule::AMonitorModule("Disk Info Module") {
 
 }
+
+DiskMonitorModule::DiskMonitorModule(const DiskMonitorModule &rhs) : AMonitorModule::AMonitorModule(rhs) {
+
+}
+
+DiskMonitorModule &DiskMonitorModule::operator=(const DiskMonitorModule &rhs) {
+    name = rhs.name;
+    return *this;
+}

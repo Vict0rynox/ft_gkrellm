@@ -25,3 +25,12 @@ AMonitorDisplay::AMonitorDisplay() : monitorModules() {
 AMonitorDisplay::~AMonitorDisplay() {
     monitorModules.clear();
 }
+
+AMonitorDisplay::AMonitorDisplay(const AMonitorDisplay &rhs) : monitorModules(rhs.monitorModules) {
+
+}
+
+AMonitorDisplay &AMonitorDisplay::operator=(const AMonitorDisplay &rhs) {
+    monitorModules = rhs.monitorModules;
+    return *this;
+}

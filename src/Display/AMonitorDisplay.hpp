@@ -14,7 +14,9 @@ protected:
     std::map<std::string, IMonitorModule*> monitorModules;
 public:
     AMonitorDisplay();
-    virtual ~AMonitorDisplay();
+    AMonitorDisplay(const AMonitorDisplay &rhs);
+    AMonitorDisplay&operator=(const AMonitorDisplay &rhs);
+    ~AMonitorDisplay();
     void addMonitorModule(IMonitorModule *monitorModule);
     void removeMonitorModule(std::string monitorModuleName);
     virtual int run() = 0;

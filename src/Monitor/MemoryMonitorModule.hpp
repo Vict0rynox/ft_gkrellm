@@ -17,9 +17,10 @@ protected:
     std::string getSwapMemory() const;
 public:
     MemoryMonitorModule();
+    MemoryMonitorModule(const MemoryMonitorModule &rhs);
+    MemoryMonitorModule&operator=(const MemoryMonitorModule &rhs);
     ~MemoryMonitorModule();
     const ModuleData update();
-
     int64_t getTotalMemory() const;
 };
 

@@ -11,6 +11,8 @@
 class NameMonitorModule : public AMonitorModule {
 public:
     NameMonitorModule();
+    NameMonitorModule(const NameMonitorModule &rhs);
+    NameMonitorModule&operator=(const NameMonitorModule &rhs);
     ~NameMonitorModule();
     const ModuleData update();
 };

@@ -17,6 +17,9 @@ public:
     typedef std::map<std::string, std::string>::const_iterator labels_const_iterator;
     typedef std::map<std::string, float>::const_iterator datums_const_iterator;
     ModuleData();
+    ~ModuleData();
+    ModuleData(const ModuleData &rhs);
+    ModuleData&operator=(const ModuleData &rhs);
     void addLabel(std::string name, std::string value);
     void addDatum(std::string name, float value);
 

@@ -9,7 +9,6 @@
 #include "../Utils/utils.hpp"
 
 
-
 const ModuleData MemoryMonitorModule::update() {
     ModuleData data;
 
@@ -75,5 +74,22 @@ void MemoryMonitorModule::updateMemory() {
 
         freeMemory = totalMemory - usedMemory;
     }
+}
+
+MemoryMonitorModule::MemoryMonitorModule(const MemoryMonitorModule &rhs) :
+        AMonitorModule::AMonitorModule(rhs.name),
+        totalMemory(rhs.totalMemory),
+        freeMemory(rhs.freeMemory),
+        usedMemory(rhs.usedMemory),
+        wiredMemory(rhs.wiredMemory) {
+}
+
+MemoryMonitorModule &MemoryMonitorModule::operator=(const MemoryMonitorModule &rhs) {
+    name = rhs.name;
+    totalMemory = rhs.totalMemory;
+    freeMemory = rhs.freeMemory;
+    usedMemory = rhs.usedMemory;
+    wiredMemory = rhs.wiredMemory;
+    return *this;
 }
 

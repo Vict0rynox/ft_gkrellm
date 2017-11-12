@@ -20,7 +20,7 @@ int NcursesDisplay::run() {
     return 0;
 }
 
-NcursesDisplay::NcursesDisplay() : AMonitorDisplay::AMonitorDisplay(), isExit(false), isSelect(false), modulesWidget(){
+NcursesDisplay::NcursesDisplay() : AMonitorDisplay::AMonitorDisplay(), isExit(false), isSelect(false), modulesWidget() {
     currWidget = modulesWidget.begin();
 }
 
@@ -66,8 +66,8 @@ void NcursesDisplay::update() {
         werase(window);
         box(window, 0, 0);
 
-        if(itr->module->getName() == currWidget->module->getName()) {
-            if(isSelect) {
+        if (itr->module->getName() == currWidget->module->getName()) {
+            if (isSelect) {
                 wbkgd(window, COLOR_PAIR(3));
             } else {
                 wbkgd(window, COLOR_PAIR(2));
@@ -140,9 +140,9 @@ void NcursesDisplay::redrowWindows() {
 
 void NcursesDisplay::control() {
     int btnCmd = getch();
-    if(btnCmd == KEY_UP) {
-        if(currWidget != modulesWidget.begin()){
-            if(isSelect) {
+    if (btnCmd == KEY_UP) {
+        if (currWidget != modulesWidget.begin()) {
+            if (isSelect) {
                 std::list<Widget>::iterator prewWidget = currWidget;
                 prewWidget--;
                 std::swap(*prewWidget, *currWidget);
@@ -153,8 +153,8 @@ void NcursesDisplay::control() {
             }
         }
     } else if (btnCmd == KEY_DOWN) {
-        if(currWidget->module->getName() != modulesWidget.back().module->getName()){
-            if(isSelect) {
+        if (currWidget->module->getName() != modulesWidget.back().module->getName()) {
+            if (isSelect) {
                 std::list<Widget>::iterator nextWidget = currWidget;
                 nextWidget++;
                 std::swap(*nextWidget, *currWidget);
@@ -165,19 +165,19 @@ void NcursesDisplay::control() {
             }
         }
     } else if (btnCmd == 32) {
-        if(isSelect) {
+        if (isSelect) {
             isSelect = false;
         } else {
             isSelect = true;
         }
-    } else if(btnCmd == KEY_F(1) && isSelect) {
-        if(modulesWidget.size() > 1) {
+    } else if (btnCmd == KEY_F(1) && isSelect) {
+        if (modulesWidget.size() > 1) {
             modulesWidget.erase(currWidget);
             currWidget = modulesWidget.begin();
             isSelect = false;
             redrowWindows();
         }
-    } else if(btnCmd == KEY_F(2)){
+    } else if (btnCmd == KEY_F(2)) {
         std::list<Widget>::iterator witr = modulesWidget.begin();
         for (; witr != modulesWidget.end(); witr++) {
             delwin(witr->window);
@@ -198,9 +198,24 @@ void NcursesDisplay::control() {
         }
         currWidget = modulesWidget.begin();
         redrowWindows();
-    } else if(btnCmd == 27) {
+    } else if (btnCmd == 27) {
         isExit = true;
     }
+}
+
+NcursesDisplay::NcursesDisplay(const NcursesDisplay &rhs) :
+        isExit(rhs.isExit),
+        currWidget(rhs.currWidget),
+        isSelect(rhs.isSelect),
+        modulesWidget(rhs.modulesWidget) {
+}
+
+NcursesDisplay &NcursesDisplay::operator=(const NcursesDisplay &rhs) {
+    isExit = rhs.isExit;
+    currWidget = rhs.currWidget;
+    isSelect = rhs.isSelect;
+    modulesWidget = rhs.modulesWidget;
+    return *this;
 }
 
 

@@ -30,6 +30,8 @@ protected:
     int moduleHeihgtCalc(IMonitorModule *module);
 public:
     NcursesDisplay();
+    NcursesDisplay(const NcursesDisplay &rhs);
+    NcursesDisplay&operator=(const NcursesDisplay &rhs);
     ~NcursesDisplay();
     int run();
 };

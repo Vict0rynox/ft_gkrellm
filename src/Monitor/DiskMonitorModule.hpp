@@ -11,6 +11,8 @@
 class DiskMonitorModule : public AMonitorModule {
 public:
     DiskMonitorModule();
+    DiskMonitorModule(const DiskMonitorModule &rhs);
+    DiskMonitorModule&operator=(const DiskMonitorModule &rhs);
     ~DiskMonitorModule();
 
     const ModuleData update();

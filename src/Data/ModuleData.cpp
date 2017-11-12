@@ -33,3 +33,17 @@ ModuleData::datums_const_iterator ModuleData::getDatumsIterator() const {
 ModuleData::datums_const_iterator ModuleData::getDatumsIteratorEnd() const {
     return datums.end();
 }
+
+ModuleData::ModuleData(const ModuleData &rhs) : labels(rhs.labels), datums(rhs.datums){
+
+}
+
+ModuleData::~ModuleData() {
+
+}
+
+ModuleData &ModuleData::operator=(const ModuleData &rhs) {
+    labels = rhs.labels;
+    datums = rhs.datums;
+    return *this;
+}

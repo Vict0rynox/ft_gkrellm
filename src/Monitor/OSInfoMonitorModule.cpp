@@ -43,3 +43,13 @@ OSInfoMonitorModule::~OSInfoMonitorModule() {
 OSInfoMonitorModule::OSInfoMonitorModule() : AMonitorModule::AMonitorModule("OS Info") {
 
 }
+
+OSInfoMonitorModule::OSInfoMonitorModule(const OSInfoMonitorModule &rhs) : AMonitorModule::AMonitorModule(rhs.name){
+
+}
+
+OSInfoMonitorModule& OSInfoMonitorModule::operator=(const OSInfoMonitorModule &rhs)
+{
+    name = rhs.name;
+    return *this;
+}

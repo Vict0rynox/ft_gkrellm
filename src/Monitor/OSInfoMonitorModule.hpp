@@ -13,6 +13,8 @@ class OSInfoMonitorModule : public AMonitorModule {
 public:
     ~OSInfoMonitorModule();
     OSInfoMonitorModule();
+    OSInfoMonitorModule(const OSInfoMonitorModule &rhs);
+    OSInfoMonitorModule&operator=(const OSInfoMonitorModule &rhs);
     const ModuleData update();
 };
 

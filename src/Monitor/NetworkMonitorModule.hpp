@@ -8,10 +8,10 @@
 #include "AMonitorModule.hpp"
 
 class NetworkMonitorModule : public AMonitorModule {
-protected:
-
 public:
     NetworkMonitorModule();
+    NetworkMonitorModule(const NetworkMonitorModule &rhs);
+    NetworkMonitorModule&operator=(const NetworkMonitorModule &rhs);
     ~NetworkMonitorModule();
     const ModuleData update();
 };

@@ -87,3 +87,16 @@ float CPUMonitorModule::calculateCPULoad(unsigned long long idleTicks, unsigned 
 void CPUMonitorModule::addCpuInfo(const std::string &fieldName, const std::string &statsName) {
     cpuInfos[fieldName] = statsName;
 }
+
+CPUMonitorModule &CPUMonitorModule::operator=(const CPUMonitorModule &rhs) {
+    cpuInfos = rhs.cpuInfos;
+    return *this;
+}
+
+CPUMonitorModule::CPUMonitorModule(const CPUMonitorModule &rhs) :
+        _previousTotalTicks(),
+_previousStateTicks(),
+        cpuInfos(rhs.cpuInfos)
+        {
+
+}

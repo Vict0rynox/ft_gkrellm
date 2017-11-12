@@ -42,3 +42,13 @@ NetworkMonitorModule::NetworkMonitorModule() : AMonitorModule::AMonitorModule("N
 NetworkMonitorModule::~NetworkMonitorModule() {
 
 }
+
+NetworkMonitorModule::NetworkMonitorModule(const NetworkMonitorModule &rhs) : AMonitorModule::AMonitorModule(rhs.name){
+
+}
+
+NetworkMonitorModule& NetworkMonitorModule::operator=(const NetworkMonitorModule &rhs)
+{
+    name = rhs.name;
+    return *this;
+}

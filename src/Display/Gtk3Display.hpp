@@ -20,13 +20,13 @@ struct WidgetMonitorModule
 class Gtk3Display : public AMonitorDisplay{
 protected:
     std::map<std::string, WidgetMonitorModule> widgetMonitorModules;
-
     GtkApplication *app;
     GtkWidget *mainWindow;
 public:
     Gtk3Display();
-
     ~Gtk3Display();
+    Gtk3Display(const Gtk3Display &rhs);
+    Gtk3Display&operator=(const Gtk3Display &rhs);
 
     void appActivate();
 

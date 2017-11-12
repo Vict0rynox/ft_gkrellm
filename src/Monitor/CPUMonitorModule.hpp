@@ -21,6 +21,8 @@ public:
     typedef std::map<std::string, std::string>::const_iterator const_iterator;
 
     CPUMonitorModule();
+    CPUMonitorModule(const CPUMonitorModule &rhs);
+    CPUMonitorModule&operator=(const CPUMonitorModule &rhs);
 
     ~CPUMonitorModule();
 
