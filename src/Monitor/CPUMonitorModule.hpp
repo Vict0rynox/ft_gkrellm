@@ -11,14 +11,14 @@
 
 class CPUMonitorModule : public AMonitorModule {
 private:
-    unsigned long long _previousTotalTicks;
-    unsigned long long _previousIdleTicks;
+    unsigned long long _previousTotalTicks[3];
+    unsigned long long _previousStateTicks[3];
 protected:
     std::map<std::string, std::string> cpuInfos;
 
-    float getLoadCPU();
+    float getLoadCPU(int stateType);
 
-    float calculateCPULoad(unsigned long long idleTicks, unsigned long long totalTicks);
+    float calculateCPULoad(unsigned long long idleTicks, unsigned long long totalTicks, int stateType);
 
 public:
     typedef std::map<std::string, std::string>::const_iterator const_iterator;

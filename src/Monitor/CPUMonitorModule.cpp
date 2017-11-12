@@ -31,14 +31,27 @@ const ModuleData CPUMonitorModule::update() {
         delete[] reinterpret_cast<char *>(buffer);
         data.addLabel(name, value);
     }
-    float cpuIdle = getLoadCPU() * 100;
-    data.addLabel("CPU Idle", Utils::to_string(cpuIdle));
+    float cpuIdle = getLoadCPU(CPU_STATE_IDLE);
+    float cpuUser = getLoadCPU(CPU_STATE_USER);
+    float cpuSystem = getLoadCPU(CPU_STATE_SYSTEM);
+    data.addLabel("CPU Idle", Utils::to_string(cpuIdle * 100));
+    data.addLabel("CPU User", Utils::to_string(cpuUser * 100));
+    data.addLabel("CPU System", Utils::to_string(cpuSystem * 100));
+
     data.addDatum("CPU Idle", cpuIdle);
+    data.addDatum("CPU User", cpuUser);
+    data.addDatum("CPU System", cpuSystem);
     return data;
 }
 
 CPUMonitorModule::CPUMonitorModule()
-        : AMonitorModule::AMonitorModule("CPU Info"), cpuInfos(), _previousTotalTicks(), _previousIdleTicks() {
+        : AMonitorModule::AMonitorModule("CPU Info"), cpuInfos(), _previousTotalTicks(), _previousStateTicks() {
+    _previousStateTicks[0] = 0;
+    _previousStateTicks[1] = 0;
+    _previousStateTicks[2] = 0;
+    _previousTotalTicks[0] = 0;
+    _previousTotalTicks[1] = 0;
+    _previousTotalTicks[2] = 0;
     cpuInfos["Name"] = "machdep.cpu.brand_string";
     cpuInfos["Core"] = "machdep.cpu.core_count";
     cpuInfos["Thread"] = "machdep.cpu.thread_count";
@@ -49,24 +62,25 @@ CPUMonitorModule::~CPUMonitorModule() {
     cpuInfos.clear();
 }
 
-float CPUMonitorModule::getLoadCPU() {
+float CPUMonitorModule::getLoadCPU(int stateType) {
     host_cpu_load_info_data_t cpuinfo = {};
     mach_msg_type_number_t count = HOST_CPU_LOAD_INFO_COUNT;
     if (host_statistics(mach_host_self(), HOST_CPU_LOAD_INFO, (host_info_t) &cpuinfo, &count) == KERN_SUCCESS) {
         unsigned long long totalTicks = 0;
-        for (int i = 0; i < CPU_STATE_MAX; i++) {
+        for (int i = 0; i < 3; i++) {
             totalTicks += cpuinfo.cpu_ticks[i];
         }
-        return calculateCPULoad(cpuinfo.cpu_ticks[CPU_STATE_IDLE], totalTicks);
+        return calculateCPULoad(cpuinfo.cpu_ticks[stateType], totalTicks, stateType);
+        //return calculateCPULoad(cpuinfo.cpu_ticks[CPU_STATE_SYSTEM], totalTicks);
     } else return -1.0f;
 }
 
-float CPUMonitorModule::calculateCPULoad(unsigned long long idleTicks, unsigned long long totalTicks) {
-    unsigned long long totalTicksSinceLastTime = totalTicks - _previousTotalTicks;
-    unsigned long long idleTicksSinceLastTime = idleTicks - _previousIdleTicks;
-    float ret = 1.0f - ((totalTicksSinceLastTime > 0) ? ((float) idleTicksSinceLastTime) / totalTicksSinceLastTime : 0);
-    _previousTotalTicks = totalTicks;
-    _previousIdleTicks = idleTicks;
+float CPUMonitorModule::calculateCPULoad(unsigned long long idleTicks, unsigned long long totalTicks, int stateType) {
+    unsigned long long totalTicksSinceLastTime = totalTicks - _previousTotalTicks[stateType];
+    unsigned long long idleTicksSinceLastTime = idleTicks - _previousStateTicks[stateType];
+    float ret =((totalTicksSinceLastTime > 0) ? (static_cast<float>(idleTicksSinceLastTime) / static_cast<float>(totalTicksSinceLastTime)) : 0);
+    _previousTotalTicks[stateType] = totalTicks;
+    _previousStateTicks[stateType] = idleTicks;
     return ret;
 }
 

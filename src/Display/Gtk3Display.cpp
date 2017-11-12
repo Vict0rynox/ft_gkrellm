@@ -83,7 +83,7 @@ void Gtk3Display::appActivate() {
         widgetMonitorModule.dataWidget = widgetDataBox;
         widgetMonitorModules[itr->second->getName()] = widgetMonitorModule;
     }
-    g_timeout_add(600, reinterpret_cast<GSourceFunc>(monitorModuleCallback), this);
+    g_timeout_add(1200, reinterpret_cast<GSourceFunc>(monitorModuleCallback), this);
     gtk_widget_show_all(this->mainWindow);
 }
 
@@ -124,7 +124,7 @@ void Gtk3Display::update() {
 
             GtkWidget *progress = gtk_progress_bar_new();
             gtk_progress_bar_set_show_text(GTK_PROGRESS_BAR(progress), 1);
-            gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress), (cditr->second / 100));
+            gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress), (cditr->second));
 
             gtk_box_pack_start(GTK_BOX(box), progress, false, true, 0);
             gtk_container_add(GTK_CONTAINER(widget), box);
