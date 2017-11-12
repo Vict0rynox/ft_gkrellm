@@ -10,11 +10,12 @@
 #include "Monitor/MemoryMonitorModule.hpp"
 #include "Monitor/NetworkMonitorModule.hpp"
 #include "Monitor/DiskMonitorModule.hpp"
+#include "Display/NcursesDisplay.hpp"
 
 
 int main(int argc, char *argv[]) {
 
-    Gtk3Display gtk3Display;
+    /*Gtk3Display gtk3Display;
     gtk3Display.addMonitorModule(new DateTimeMonitorModule());
     gtk3Display.addMonitorModule(new OSInfoMonitorModule());
     gtk3Display.addMonitorModule(new CPUMonitorModule());
@@ -22,7 +23,18 @@ int main(int argc, char *argv[]) {
     gtk3Display.addMonitorModule(new NetworkMonitorModule());
     gtk3Display.addMonitorModule(new DiskMonitorModule());
     gtk3Display.addMonitorModule(new NameMonitorModule());
-    gtk3Display.run();
+    gtk3Display.run();*/
+
+    NcursesDisplay ncursesDisplay;
+    ncursesDisplay.addMonitorModule(new DateTimeMonitorModule());
+    ncursesDisplay.addMonitorModule(new OSInfoMonitorModule());
+    ncursesDisplay.addMonitorModule(new CPUMonitorModule());
+    ncursesDisplay.addMonitorModule(new MemoryMonitorModule());
+    ncursesDisplay.addMonitorModule(new NetworkMonitorModule());
+    ncursesDisplay.addMonitorModule(new DiskMonitorModule());
+    ncursesDisplay.addMonitorModule(new NameMonitorModule());
+    ncursesDisplay.run();
 
     return 0;
+
 }

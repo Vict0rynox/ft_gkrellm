@@ -7,6 +7,7 @@
 
 
 #include "IMonitorDisplay.hpp"
+#include "AMonitorDisplay.hpp"
 #include <gtk/gtk.h>
 
 struct WidgetMonitorModule
@@ -16,9 +17,8 @@ struct WidgetMonitorModule
     IMonitorModule *module;
 };
 
-class Gtk3Display : public IMonitorDisplay{
+class Gtk3Display : public AMonitorDisplay{
 protected:
-    std::map<std::string, IMonitorModule*> monitorModules;
     std::map<std::string, WidgetMonitorModule> widgetMonitorModules;
 
     GtkApplication *app;
@@ -27,10 +27,6 @@ public:
     Gtk3Display();
 
     ~Gtk3Display();
-
-    void addMonitorModule(IMonitorModule *monitorModule);
-
-    void removeMonitorModule(std::string monitorModuleName);
 
     void appActivate();
 

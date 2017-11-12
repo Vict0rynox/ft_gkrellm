@@ -15,6 +15,8 @@ public:
     virtual ~IMonitorDisplay(){};
     virtual void addMonitorModule(IMonitorModule *monitorModule) = 0;
     virtual void removeMonitorModule(std::string monitorModuleName) = 0;
+    virtual int run() = 0;
+
 };
 
 

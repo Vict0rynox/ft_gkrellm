@@ -15,22 +15,7 @@ static gboolean monitorModuleCallback(Gtk3Display *display) {
     return true;
 }
 
-
-void Gtk3Display::addMonitorModule(IMonitorModule *monitorModule) {
-    //monitor hasen't
-    if (monitorModules.find(monitorModule->getName()) == monitorModules.end()) {
-        monitorModules[monitorModule->getName()] = monitorModule;
-    }
-}
-
-void Gtk3Display::removeMonitorModule(std::string monitorModuleName) {
-    std::map<std::string, IMonitorModule *>::iterator itr = monitorModules.find(monitorModuleName);
-    if (itr != monitorModules.end()) {
-        monitorModules.erase(itr);
-    }
-}
-
-Gtk3Display::Gtk3Display() : monitorModules(), widgetMonitorModules() {
+Gtk3Display::Gtk3Display() : AMonitorDisplay::AMonitorDisplay(), widgetMonitorModules() {
     app = gtk_application_new("org.ft_gkrellm.unit", G_APPLICATION_FLAGS_NONE);
 }
 
