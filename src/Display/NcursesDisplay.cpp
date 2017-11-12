@@ -78,6 +78,8 @@ void NcursesDisplay::update() {
             for (int i = fill; i < maxSize; ++i) {
                 progBar[i] = '_';
             }
+            mvwprintw(window,y,2, "%s:", cditr->first.c_str());
+            y += 2;
             mvwprintw(window,y,2, "%s", progBar);
             y += 2;
             delete[](progBar);
@@ -96,7 +98,7 @@ int NcursesDisplay::moduleHeihgtCalc(IMonitorModule *module) {
     }
     ModuleData::datums_const_iterator cditr = data.getDatumsIterator();
     for (;cditr != data.getDatumsIteratorEnd(); cditr++) {
-        height += 2.5;
+        height += 4.5;
     }
     //calc dynamic;
     return static_cast<int>(std::roundf(height));
